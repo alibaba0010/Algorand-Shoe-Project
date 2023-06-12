@@ -1,0 +1,1 @@
+An Algorand Shoe Project for a shoe store
