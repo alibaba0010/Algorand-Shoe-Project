@@ -1,0 +1,160 @@
+#pragma version 6
+txn ApplicationID
+int 0
+==
+bnz main_l12
+txn OnCompletion
+int DeleteApplication
+==
+bnz main_l11
+txna ApplicationArgs 0
+byte "buy"
+==
+bnz main_l8
+txna ApplicationArgs 0
+byte "addmoreshoes"
+==
+bnz main_l7
+txna ApplicationArgs 0
+byte "size"
+==
+bnz main_l6
+err
+main_l6:
+byte "SIZE"
+txna ApplicationArgs 1
+app_global_put
+int 1
+return
+main_l7:
+byte "AVAILABLESHOES"
+byte "AVAILABLESHOES"
+app_global_get
+txna ApplicationArgs 1
+btoi
++
+app_global_put
+int 1
+return
+main_l8:
+txn Sender
+global CreatorAddress
+!=
+byte "AVAILABLESHOES"
+app_global_get
+int 0
+>
+&&
+global GroupSize
+int 2
+==
+&&
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CreatorAddress
+==
+&&
+gtxn 1 Amount
+byte "PRICE"
+app_global_get
+txna ApplicationArgs 1
+btoi
+*
+==
+&&
+gtxn 1 Sender
+gtxn 0 Sender
+==
+&&
+&&
+bnz main_l10
+int 0
+return
+main_l10:
+byte "SOLD"
+byte "SOLD"
+app_global_get
+txna ApplicationArgs 1
+btoi
++
+app_global_put
+byte "AVAILABLESHOES"
+byte "AVAILABLESHOES"
+app_global_get
+txna ApplicationArgs 1
+btoi
+-
+app_global_put
+int 1
+return
+main_l11:
+txn Sender
+global CreatorAddress
+==
+return
+main_l12:
+txn NumAppArgs
+int 6
+==
+txn Note
+byte "shoe_store:uv1.6"
+==
+&&
+txna ApplicationArgs 0
+len
+int 0
+>
+&&
+txna ApplicationArgs 1
+len
+int 0
+>
+&&
+txna ApplicationArgs 2
+len
+int 0
+>
+&&
+txna ApplicationArgs 3
+len
+int 0
+>
+&&
+txna ApplicationArgs 4
+btoi
+int 0
+>
+&&
+txna ApplicationArgs 5
+btoi
+int 0
+>
+&&
+assert
+byte "BRAND"
+txna ApplicationArgs 0
+app_global_put
+byte "IMAGE"
+txna ApplicationArgs 1
+app_global_put
+byte "DESCRIPTION"
+txna ApplicationArgs 2
+app_global_put
+byte "SIZE"
+txna ApplicationArgs 3
+app_global_put
+byte "PRICE"
+txna ApplicationArgs 4
+btoi
+app_global_put
+byte "AVAILABLESHOES"
+txna ApplicationArgs 5
+btoi
+app_global_put
+byte "SOLD"
+int 0
+app_global_put
+int 1
+return
