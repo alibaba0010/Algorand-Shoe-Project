@@ -1,23 +1,23 @@
 import React, {useEffect, useState} from "react";
 import {toast} from "react-toastify";
-import AddCar from "./AddCar";
-import Car from "./Car";
+import AddShoe from "./AddShoes";
+import Shoe from "./Shoe";
 import Loader from "../utils/Loader";
 import {NotificationError, NotificationSuccess} from "../utils/Notifications";
-import {buyCarAction, createCarAction, addmoreCarsAction, changelocationAction,  deleteCarAction, getCarsAction,} from "../../utils/marketplace";
+import {buyShoeAction, createShoeAction, addmoreShoesAction, changelocationAction,  deleteShoeAction, getShoesAction,} from "../../utils/marketplace";//1
 import PropTypes from "prop-types";
 import {Row} from "react-bootstrap";
 
-const Cars = ({address, fetchBalance}) => {
-    const [cars, setCars] = useState([]);
+const Shoes = ({address, fetchBalance}) => {
+    const [shoes, setShoes] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const getCars = async () => {
+    const getShoes = async () => {
         setLoading(true);
-        getCarsAction()
-            .then(cars => {
-                if (cars) {
-                    setCars(cars);
+        getShoesAction()
+            .then(shoes => {
+                if (shoes) {
+                    setShoes(shoes);
                 }
             })
             .catch(error => {
@@ -29,47 +29,47 @@ const Cars = ({address, fetchBalance}) => {
     };
 
     useEffect(() => {
-        getCars();
+        getShoes();
     }, []);
 
-    const createCar = async (data) => {
+    const createShoe = async (data) => {
         setLoading(true);
-        createCarAction(address, data)
+        createShoeAction(address, data)
             .then(() => {
-                toast(<NotificationSuccess text="Car added successfully."/>);
-                getCars();
+                toast(<NotificationSuccess text="Shoes added successfully."/>);
+                getShoes();
                 fetchBalance(address);
             })
             .catch(error => {
                 console.log(error);
-                toast(<NotificationError text="Failed to add caar."/>);
+                toast(<NotificationError text="Failed to add shoes."/>);
                 setLoading(false);
             })
     };
 
 
-    const addCar = async (car, ammount) => {
+    const AddShoes = async (shoe, ammount) => {
         setLoading(true);
-        addmoreCarsAction(address, car, ammount)
+        addmoreShoesAction(address, shoe, ammount)
             .then(() => {
-                toast(<NotificationSuccess text="Car added"/>);
-                getCars();
+                toast(<NotificationSuccess text="Shoes added"/>);
+                getShoes();
                 fetchBalance(address);
             })
             .catch(error => {
                 console.log(error)
-                toast(<NotificationError text="Failed to add car."/>);
+                toast(<NotificationError text="Failed to add shoes."/>);
                 setLoading(false);
             })
     };
 
 
-    const changeLocation = async (car, location) => {
+    const changeLocation = async (shoe, location) => {
         setLoading(true);
-        changelocationAction(address, car, location)
+        changelocationAction(address, shoe, location)
             .then(() => {
                 toast(<NotificationSuccess text="location changed successfully"/>);
-                getCars();
+                getShoes();
                 fetchBalance(address);
             })
             .catch(error => {
@@ -81,32 +81,32 @@ const Cars = ({address, fetchBalance}) => {
 
 
 
-    const buyCar = async (car) => {
+    const buyShoe = async (shoe) => {
         setLoading(true);
-        buyCarAction(address, car)
+        buyShoeAction(address, shoe)
             .then(() => {
-                toast(<NotificationSuccess text="Car bought successfully"/>);
-                getCars();
+                toast(<NotificationSuccess text="Shoes bought successfully"/>);
+                getShoes();
                 fetchBalance(address);
             })
             .catch(error => {
                 console.log(error)
-                toast(<NotificationError text="Failed to buy car."/>);
+                toast(<NotificationError text="Failed to buy shoes."/>);
                 setLoading(false);
             })
     };
 
-    const deleteCar = async (car) => {
+    const deleteShoe = async (shoe) => {
         setLoading(true);
-        deleteCarAction(address, car.appId)
+        deleteShoeAction(address, shoe.appId)
             .then(() => {
-                toast(<NotificationSuccess text="Car deleted successfully"/>);
-                getCars();
+                toast(<NotificationSuccess text="Shoes deleted successfully"/>);
+                getShoes();
                 fetchBalance(address);
             })
             .catch(error => {
                 console.log(error)
-                toast(<NotificationError text="Failed to delete car."/>);
+                toast(<NotificationError text="Failed to delete shoes."/>);
                 setLoading(false);
             })
     };
@@ -117,20 +117,20 @@ const Cars = ({address, fetchBalance}) => {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1 className="fs-4 fw-bold mb-0">Rider dapp</h1>
-                <AddCar createCar={createCar}/>
+                <h1 className="fs-4 fw-bold mb-0">Shoe Store dapp</h1>
+                <AddShoe createShoe={createShoe}/>
             </div>
             <Row xs={1} sm={2} lg={3} className="g-3 mb-5 g-xl-4 g-xxl-5">
                 <>
-                    {cars.map((data, index) => (
-                        <Car
+                    {shoes.map((data, index) => (
+                        <Shoe
                             address={address}
-                            car={data}
-                            buyCar={buyCar}
+                            shoe={data}
+                            buyShoe={buyShoe}
                             changeLocation = {changeLocation}
-                            addCar = {addCar}
+                            AddShoes = {AddShoes}
                     
-                            deleteCar={deleteCar}
+                            deleteShoe={deleteShoe}
                             key={index}
                         />
                     ))}
@@ -140,9 +140,9 @@ const Cars = ({address, fetchBalance}) => {
     );
 };
 
-Cars.propTypes = {
+Shoes.propTypes = {
     address: PropTypes.string.isRequired,
     fetchBalance: PropTypes.func.isRequired
 };
 
-export default Cars;
+export default Shoes;

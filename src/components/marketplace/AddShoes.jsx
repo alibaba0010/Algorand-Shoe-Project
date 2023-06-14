@@ -3,17 +3,17 @@ import PropTypes from "prop-types";
 import {Button, FloatingLabel, Form, Modal} from "react-bootstrap";
 import {stringToMicroAlgos} from "../../utils/conversions";
 
-const AddCar = ({createCar}) => {
+const AddShoe = ({createShoes}) => {
     const [brand, setBrand] = useState("");
     const [image, setImage] = useState("");
     const [description, setDescription] = useState("");
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState(0);
-    const [availableCars, setAvailableCars] = useState(1);
+    const [availableShoes, setAvailableShoes] = useState(1);
 
     const isFormFilled = useCallback(() => {
-        return brand && image && description && location && price && availableCars > 0
-    }, [brand, image, description, location, price, availableCars]);
+        return brand && image && description && location && price && availableShoes > 0
+    }, [brand, image, description, location, price, availableShoes]);
 
     const [show, setShow] = useState(false);
 
@@ -32,13 +32,13 @@ const AddCar = ({createCar}) => {
             </Button>
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add new Car</Modal.Title>
+                    <Modal.Title>Add new Shoe</Modal.Title>
                 </Modal.Header>
                 <Form>
                     <Modal.Body>
                         <FloatingLabel
                             controlId="inputBrand"
-                            label="Car brand"
+                            label="Shoe brand"
                             className="mb-3"
                         >
                             <Form.Control
@@ -112,10 +112,10 @@ const AddCar = ({createCar}) => {
                         >
                             <Form.Control
                                 type="number"
-                                value={availableCars}
-                                placeholder="Available cars"
+                                value={availableShoes}
+                                placeholder="Available shoes"
                                 onChange={(e) => {
-                                    setAvailableCars(Number(e.target.value));
+                                    setAvailableShoes(Number(e.target.value));
                                 }}
                             />
                         </FloatingLabel>
@@ -129,18 +129,18 @@ const AddCar = ({createCar}) => {
                         variant="dark"
                         disabled={!isFormFilled()}
                         onClick={() => {
-                            createCar({
+                            createShoes({
                                 brand,
                                 image,
                                 description,
                                 location,
                                 price,
-                                availableCars,
+                                availableShoes,
                             });
                             handleClose();
                         }}
                     >
-                        Save Car
+                        Save Shoe
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -148,8 +148,8 @@ const AddCar = ({createCar}) => {
     );
 };
 
-AddCar.propTypes = {
-    createCar: PropTypes.func.isRequired,
+AddShoe.propTypes = {
+    createShoes: PropTypes.func.isRequired,
 };
 
-export default AddCar;
+export default AddShoe;

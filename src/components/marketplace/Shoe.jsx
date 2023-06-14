@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import {Badge, Button, Card, Col, FloatingLabel, Form, Stack} from "react-bootstrap";
 import {microAlgosToString, truncateAddress} from "../../utils/conversions";
 import Identicon from "../utils/Identicon";
-import {stringToMicroAlgos} from "../../utils/conversions";
+// import {stringToMicroAlgos} from "../../utils/conversions";
 
-const Car = ({address, car, buyCar, deleteCar, addCar, changeLocation,}) => {
-    const {brand, image, description, location, price, availableCars, sold, appId, owner} = car;
+const Shoe = ({address, shoe, buyShoe, deleteShoe, AddShoes, changeLocation,}) => {
+    const {brand, image, description, location, price, availableShoes, sold, appId, owner} = shoe;//1
 
     const [ammount, setAmmount] = useState("");
     const [newlocation, setNewLocation] = useState("");
@@ -20,7 +20,7 @@ const Car = ({address, car, buyCar, deleteCar, addCar, changeLocation,}) => {
                         <span className="font-monospace text-secondary">{truncateAddress(owner)}</span>
                         <Identicon size={28} address={owner}/>
                         <Badge bg="secondary" className="ms-auto">
-                            {availableCars} Available
+                            {availableShoes} Available
                         </Badge>
 
                         <Badge bg="secondary" className="ms-auto">
@@ -37,22 +37,22 @@ const Car = ({address, car, buyCar, deleteCar, addCar, changeLocation,}) => {
                     <Card.Text className="flex-grow-1"> Location: {location}</Card.Text>
                     <Form className="d-flex align-content-stretch flex-row gap-2">
                        
-                        {car.owner !== address && availableCars > 0 ?(
+                        {shoe.owner !== address && availableShoes > 0 ?(
                         <Button
                             variant="outline-dark"
-                            onClick={() => buyCar(car)}
+                            onClick={() => buyShoe(shoe)}
                             className="w-75 py-3"
                         >
                             Buy for {microAlgosToString(price)} ALGO
                         </Button>
                         ):(
-                            <Card.Text className="flex-grow-1">{car.owner!== address? "SOLD OUT": ""}</Card.Text>
+                            <Card.Text className="flex-grow-1">{shoe.owner!== address? "SOLD OUT": ""}</Card.Text>
                         )
                         }
-                        {car.owner === address &&
+                        {shoe.owner === address &&
                             <Button
                                 variant="outline-danger"
-                                onClick={() => deleteCar(car)}
+                                onClick={() => deleteShoe(shoe)}
                                 className="btn"
                             >
                                 <i className="bi bi-trash"></i>
@@ -63,7 +63,7 @@ const Car = ({address, car, buyCar, deleteCar, addCar, changeLocation,}) => {
 
 
           
-                   {car.owner === address &&
+                   {shoe.owner === address &&
                    <Form>
                     <FloatingLabel
                             controlId="inputAmmount"
@@ -81,16 +81,16 @@ const Car = ({address, car, buyCar, deleteCar, addCar, changeLocation,}) => {
 
                         <Button
                                 variant="outline-success"
-                                onClick={() => addCar(car, ammount)}
+                                onClick={() => AddShoes(shoe, ammount)}
                                 className="btn"
                             >
-                                Add more car inventory
+                                Add more shoe inventory
                             </Button>
                    </Form>
                           
                         }
 
-                   {car.owner === address &&
+                   {shoe.owner === address &&
                             <Form>
                                  <FloatingLabel
                             controlId="inputLOCATION"
@@ -108,7 +108,7 @@ const Car = ({address, car, buyCar, deleteCar, addCar, changeLocation,}) => {
 
                         <Button
                                 variant="outline-success"
-                                onClick={() => changeLocation(car, newlocation)}
+                                onClick={() => changeLocation(shoe, newlocation)}
                                 className="btn"
                             >
                                 change Location
@@ -125,13 +125,13 @@ const Car = ({address, car, buyCar, deleteCar, addCar, changeLocation,}) => {
     );
 };
 
-Car.propTypes = {
+Shoe.propTypes = {
     address: PropTypes.string.isRequired,
-    car: PropTypes.instanceOf(Object).isRequired,
-    buyCar: PropTypes.func.isRequired,
-    addCar: PropTypes.func.isRequired,
-    changeLocation: PropTypes.func.isRequired,
-    deleteCar: PropTypes.func.isRequired
+    shoe: PropTypes.instanceOf(Object).isRequired,
+    buyShoe: PropTypes.func.isRequired,
+    AddShoes: PropTypes.func.isRequired,
+    changeLocation: PropTypes.func.isRequired,//2
+    deleteShoe: PropTypes.func.isRequired
 };
 
-export default Car;
+export default Shoe;
