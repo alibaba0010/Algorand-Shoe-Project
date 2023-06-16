@@ -3,7 +3,7 @@ import Cover from "./components/Cover"; //modify
 import "./App.css"; //modify
 import Wallet from "./components/Wallet"; //3
 import { Container, Nav } from "react-bootstrap";
-import Shoes from "./components/marketplace/Shoes"; 
+import Shoes from "./components/marketplace/Shoes"; //done
 import { indexerClient, myAlgoConnect } from "./utils/constants";
 import { Notification } from "./components/utils/Notifications"; //2
 

@@ -11,8 +11,8 @@ import {
     numLocalInts
 } from "./constants";
 /* eslint import/no-webpack-loader-syntax: off */
-import approvalProgram from "!!raw-loader!../contracts/rider_contract_approval.teal";
-import clearProgram from "!!raw-loader!../contracts/rider_contract_clear.teal";
+import approvalProgram from "!!raw-loader!../contracts/shoe_store_contract_approval.teal";
+import clearProgram from "!!raw-loader!../contracts/shoe_store_contract_clear.teal";
 import {base64ToUTF8String, utf8ToBase64String} from "./conversions";
 
 class Car {
@@ -37,8 +37,8 @@ const compileProgram = async (programSource) => {
     return new Uint8Array(Buffer.from(compileResponse.result, "base64"));
 }
 
-// CREATE PRODUCT: ApplicationCreateTxn
-export const createCarAction = async (senderAddress, car) => {
+// CREATE SHOE: ApplicationCreateTxn
+export const createShoeAction = async (senderAddress, car) => {
     console.log("Adding new car...")
 
     let params = await algodClient.getTransactionParams().do();
@@ -99,7 +99,7 @@ export const createCarAction = async (senderAddress, car) => {
 
   
 // ADDING A NEW CAR: Group transaction consisting of ApplicationCallTxn 
-export const addmoreCarsAction = async (senderAddress, car, ammount) => {
+export const addmoreShoesAction = async (senderAddress, car, ammount) => {
     console.log("adding car...");
   
     let params = await algodClient.getTransactionParams().do();
@@ -200,8 +200,8 @@ export const changelocationAction = async (senderAddress, car, location) => {
 
 
 
-// BUY CAR: Group transaction consisting of ApplicationCallTxn and PaymentTxn
-export const buyCarAction = async (senderAddress, car) => {
+// BUY SHOE: Group transaction consisting of ApplicationCallTxn and PaymentTxn
+export const buyShoeAction = async (senderAddress, car) => {
     console.log("Buying picture...");
 
     let params = await algodClient.getTransactionParams().do();
@@ -245,8 +245,8 @@ export const buyCarAction = async (senderAddress, car) => {
     console.log("Group transaction " + tx.txId + " confirmed in round " + confirmedTxn["confirmed-round"]);
 }
 
-// DELETE CAR: ApplicationDeleteTxn
-export const deleteCarAction = async (senderAddress, index) => {
+// DELETE SHOE: ApplicationDeleteTxn
+export const deleteShoeAction = async (senderAddress, index) => {
     console.log("Deleting application...");
 
     let params = await algodClient.getTransactionParams().do();
@@ -276,8 +276,8 @@ export const deleteCarAction = async (senderAddress, index) => {
     console.log("Deleted app-id: ", appId);
 }
 
-// GET PRODUCTS: Use indexer
-export const getCarsAction = async () => {
+// GET SHOES: Use indexer
+export const getShoesAction = async () => {
     console.log("Fetching cars...")
     let note = new TextEncoder().encode(riderNote);
     let encodedNote = Buffer.from(note).toString("base64");
