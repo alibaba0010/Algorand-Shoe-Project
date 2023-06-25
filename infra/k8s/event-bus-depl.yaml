@@ -1,33 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: posts-depl
+  name: event-bus-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: posts
+      app: event-bus
   template:
     metadata:
       labels:
-        app: posts
+        app: event-bus
     spec:
       containers:
-        - name: posts
+        - name: event-bus
           image: # image built in docker build -t image_name
-
 ---
 apiVersion: apps/v1
 kind: Service
 metadata:
-  name: posts-cluster-srv
+  name: event-bus-srv
 spec:
   type: NodePort
   selector:
-    app: posts-cluster
+    app: event-bus
   # type: ClusterIP
   ports:
-    - name: posts-cluster
+    - name: event-bus
       protocol: TCP
-      port: 4000
-      targetPort: 4000
+      port: 4005
+      targetPort: 4005
+
