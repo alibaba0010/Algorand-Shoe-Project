@@ -15,14 +15,14 @@ import approvalProgram from "!!raw-loader!../contracts/shoe_store_contract_appro
 import clearProgram from "!!raw-loader!../contracts/shoe_store_contract_clear.teal";
 import {base64ToUTF8String, utf8ToBase64String} from "./conversions";
 
-class Car {
-    constructor(brand, image, description, location, price, availableCars, sold, appId, owner) {
+class Shoe {
+    constructor(brand, image, description, location, price, availableShoes, sold, appId, owner) {
         this.brand = brand;
         this.image = image;
         this.description = description;
         this.location = location;
         this.price = price;
-        this.availableCars = availableCars;
+        this.availableShoes = availableShoes;
         this.sold = sold;
         this.appId = appId;
         this.owner = owner;
@@ -38,8 +38,8 @@ const compileProgram = async (programSource) => {
 }
 
 // CREATE SHOE: ApplicationCreateTxn
-export const createShoeAction = async (senderAddress, car) => {
-    console.log("Adding new car...")
+export const createShoeAction = async (senderAddress, shoe) => {
+    console.log("Adding new shoes...")
 
     let params = await algodClient.getTransactionParams().do();
 
@@ -49,15 +49,15 @@ export const createShoeAction = async (senderAddress, car) => {
 
     // Build note to identify transaction later and required app args as Uint8Arrays
     let note = new TextEncoder().encode(riderNote);
-    let brand = new TextEncoder().encode(car.brand);
-    let image = new TextEncoder().encode(car.image);
-    let description = new TextEncoder().encode(car.description);
-    let location = new TextEncoder().encode(car.location);
-    let price = algosdk.encodeUint64(car.price);
-    let numbercar = Number(car.availableCars);
-    let availableCars = algosdk.encodeUint64(numbercar);
+    let brand = new TextEncoder().encode(shoe.brand);
+    let image = new TextEncoder().encode(shoe.image);
+    let description = new TextEncoder().encode(shoe.description);
+    let location = new TextEncoder().encode(shoe.location);
+    let price = algosdk.encodeUint64(shoe.price);
+    let numbershoe = Number(shoe.availableShoes);
+    let availableShoes = algosdk.encodeUint64(numbershoe);
 
-    let appArgs = [brand, image, description, location, price, availableCars]
+    let appArgs = [brand, image, description, location, price, availableShoes]
 
     // Create ApplicationCreateTxn
     let txn = algosdk.makeApplicationCreateTxnFromObject({
@@ -98,24 +98,24 @@ export const createShoeAction = async (senderAddress, car) => {
 
 
   
-// ADDING A NEW CAR: Group transaction consisting of ApplicationCallTxn 
-export const addmoreShoesAction = async (senderAddress, car, ammount) => {
-    console.log("adding car...");
+// ADDING NEW Shoes: Group transaction consisting of ApplicationCallTxn 
+export const addmoreShoesAction = async (senderAddress, shoe, ammount) => {
+    console.log("adding shoes...");
   
     let params = await algodClient.getTransactionParams().do();
   
     // Build required app args as Uint8Array
-    let addcarArg = new TextEncoder().encode("addmorecars");
+    let addshoeArg = new TextEncoder().encode("addmoreshoes");
     let newammount_ = Number(ammount);
     let newammount = algosdk.encodeUint64(newammount_);
 
   
-    let appArgs = [addcarArg, newammount];
+    let appArgs = [addshoeArg, newammount];
   
     // Create ApplicationCallTxn
     let appCallTxn = algosdk.makeApplicationCallTxnFromObject({
       from: senderAddress,
-      appIndex: car.appId,
+      appIndex: shoe.appId,
       onComplete: algosdk.OnApplicationComplete.NoOpOC,
       suggestedParams: params,
       appArgs: appArgs,
@@ -149,7 +149,7 @@ export const addmoreShoesAction = async (senderAddress, car, ammount) => {
   };
   
 // CHANGE LOCATION: Group transaction consisting of ApplicationCallTxn 
-export const changelocationAction = async (senderAddress, car, location) => {
+export const changelocationAction = async (senderAddress, shoe, location) => {
     console.log("changing location...");
   
     let params = await algodClient.getTransactionParams().do();
@@ -163,7 +163,7 @@ export const changelocationAction = async (senderAddress, car, location) => {
     // Create ApplicationCallTxn
     let appCallTxn = algosdk.makeApplicationCallTxnFromObject({
       from: senderAddress,
-      appIndex: car.appId,
+      appIndex: shoe.appId,
       onComplete: algosdk.OnApplicationComplete.NoOpOC,
       suggestedParams: params,
       appArgs: appArgs,
@@ -201,7 +201,7 @@ export const changelocationAction = async (senderAddress, car, location) => {
 
 
 // BUY SHOE: Group transaction consisting of ApplicationCallTxn and PaymentTxn
-export const buyShoeAction = async (senderAddress, car) => {
+export const buyShoeAction = async (senderAddress, shoe) => {
     console.log("Buying picture...");
 
     let params = await algodClient.getTransactionParams().do();
@@ -213,7 +213,7 @@ export const buyShoeAction = async (senderAddress, car) => {
     // Create ApplicationCallTxn
     let appCallTxn = algosdk.makeApplicationCallTxnFromObject({
         from: senderAddress,
-        appIndex: car.appId,
+        appIndex: shoe.appId,
         onComplete: algosdk.OnApplicationComplete.NoOpOC,
         suggestedParams: params,
         appArgs: appArgs
@@ -222,8 +222,8 @@ export const buyShoeAction = async (senderAddress, car) => {
     // Create PaymentTxn
     let paymentTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
         from: senderAddress,
-        to: car.owner,
-        amount: car.price,
+        to: shoe.owner,
+        amount: shoe.price,
         suggestedParams: params
     })
 
@@ -278,7 +278,7 @@ export const deleteShoeAction = async (senderAddress, index) => {
 
 // GET SHOES: Use indexer
 export const getShoesAction = async () => {
-    console.log("Fetching cars...")
+    console.log("Fetching shoes...")
     let note = new TextEncoder().encode(riderNote);
     let encodedNote = Buffer.from(note).toString("base64");
 
@@ -288,19 +288,19 @@ export const getShoesAction = async () => {
         .txType("appl")
         .minRound(minRound)
         .do();
-    let cars = []
+    let shoes = []
     for (const transaction of transactionInfo.transactions) {
         let appId = transaction["created-application-index"]
         if (appId) {
             // Step 2: Get each application by application id
-            let car = await getApplication(appId)
-            if (car) {
-                cars.push(car)
+            let shoe = await getApplication(appId)
+            if (shoe) {
+                shoes.push(shoe)
             }
         }
     }
-    console.log("Cars fetched.")
-    return cars
+    console.log("Shoes fetched.")
+    return shoes
 }
 
 
@@ -320,7 +320,7 @@ const getApplication = async (appId) => {
         let description = ""
         let location = ""
         let price = 0
-        let avaiableCars = 0
+        let avaiableShoes = 0
         let sold = 0
 
         const getField = (fieldName, globalState) => {
@@ -353,15 +353,15 @@ const getApplication = async (appId) => {
             price = getField("PRICE", globalState).value.uint
         }
 
-        if (getField("AVAILABLECARS", globalState) !== undefined) {
-            avaiableCars = getField("AVAILABLECARS", globalState).value.uint
+        if (getField("AVAILABLESHOES", globalState) !== undefined) {
+            avaiableShoes = getField("AVAILABLESHOES", globalState).value.uint
         }
 
         if (getField("SOLD", globalState) !== undefined) {
             sold = getField("SOLD", globalState).value.uint
         }
 
-        return new Car(brand, image, description, location, price, avaiableCars, sold, appId, owner)
+        return new Shoe(brand, image, description, location, price, avaiableShoes, sold, appId, owner)
     } catch (err) {
         return null;
     }
